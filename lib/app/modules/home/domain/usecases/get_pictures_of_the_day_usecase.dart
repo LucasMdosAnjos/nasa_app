@@ -24,10 +24,10 @@ class GetPicturesOfTheDayUsecase implements IGetPicturesOfTheDayUsecase {
   GetPicturesOfTheDayUsecase(this.repository);
   @override
   Future<Either<GetPicturesOfTheDayException, List<NasaApod>>> call(
-      ParamsGetPicturesOfTheDay params) async{
-        /*
+      ParamsGetPicturesOfTheDay params) async {
+    /*
             Data Validation Before returning repository result
         */
-        return await repository.getPicturesOfTheDay(params);
+    return await repository.getPicturesOfTheDay(params);
   }
 }
