@@ -19,4 +19,9 @@ class NasaApod {
     required this.title,
     required this.url,
   });
+
+  @override
+  String toString() {
+    return 'NasaApod(copyright: $copyright, date: $date, explanation: $explanation, hdurl: $hdurl, media_type: $media_type, service_version: $service_version, title: $title, url: $url)';
+  }
 }
