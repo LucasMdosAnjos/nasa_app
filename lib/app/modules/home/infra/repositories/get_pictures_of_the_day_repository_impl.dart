@@ -16,12 +16,12 @@ class GetPicturesOfTheDayRepositoryImpl
     /*
         Handling Exceptions 
          */
-    try {
+    //try {
       return Right(await datasource.getPicturesOfTheDay(params));
-    } on GetPicturesOfTheDayException catch (e) {
-      return Left(e);
-    } catch (e) {
-      return Left(GetPicturesOfTheDayException(e.toString()));
-    }
+    // } on GetPicturesOfTheDayException catch (e) {
+    //   return Left(e);
+    // } catch (e) {
+    //   return Left(GetPicturesOfTheDayException(e.toString()));
+    // }
   }
 }

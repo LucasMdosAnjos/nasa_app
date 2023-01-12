@@ -9,7 +9,7 @@ class MapperGetPicturesOfTheDay {
       //return a list of NasaApod objects
       return result
           .map((e) => NasaApod(
-              copyright: e['copyright'],
+              copyright: e['copyright'] ?? 'No author',
               date: e['date'],
               explanation: e['explanation'],
               hdurl: e['hdurl'],

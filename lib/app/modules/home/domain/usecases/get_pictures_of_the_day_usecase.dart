@@ -9,11 +9,11 @@ import 'package:nasa_app/app/modules/home/domain/repositories/get_pictures_of_th
 class ParamsGetPicturesOfTheDay {
   final String api_key;
   ParamsGetPicturesOfTheDay({
-    required this.api_key,
+    required this.api_key
   });
 
   String toUrlParams() {
-    return "api_key=$api_key";
+    return "api_key=$api_key&count=10";
   }
 }
 
