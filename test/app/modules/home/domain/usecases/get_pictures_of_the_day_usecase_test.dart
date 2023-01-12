@@ -3,6 +3,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:nasa_app/app/constants/config_constants.dart';
 import 'package:nasa_app/app/modules/home/domain/entities/nasa_apod.dart';
 import 'package:nasa_app/app/modules/home/domain/errors/errors.dart';
 import 'package:nasa_app/app/modules/home/domain/usecases/get_pictures_of_the_day_usecase.dart';
@@ -14,13 +15,12 @@ class MockGetPicturesOfTheDayRepositoryImpl extends Mock
     implements GetPicturesOfTheDayRepository {}
 
 void main() {
-  const api_key = 'ALhQW2dErZ4vb77uGQDxmUflmKKrtVPuFoo6kCiZ';
   final datasource = DioGetPicturesOfTheDay();
   final repository = GetPicturesOfTheDayRepositoryImpl(datasource);
   //final repository = MockGetPicturesOfTheDayRepositoryImpl(); //If mock is needed
   final usecase = GetPicturesOfTheDayUsecase(repository);
   test('get pictures of the day usecase (success) with mock', () async {
-    final params = ParamsGetPicturesOfTheDay(api_key: api_key);
+    final params = ParamsGetPicturesOfTheDay(api_key: ConfigConstants.API_KEY);
     when(() => repository.getPicturesOfTheDay(params))
         .thenAnswer((_) async => Right(<NasaApod>[
               NasaApod(
@@ -42,7 +42,7 @@ void main() {
   });
 
   test('get pictures of the day usecase (error) with mock', () async {
-    final params = ParamsGetPicturesOfTheDay(api_key: api_key);
+    final params = ParamsGetPicturesOfTheDay(api_key: ConfigConstants.API_KEY);
     when(() => repository.getPicturesOfTheDay(params)).thenAnswer(
         (_) async => Left(GetPicturesOfTheDayException('API_KEY_INVALID')));
     final result = await usecase(params);
@@ -51,7 +51,7 @@ void main() {
   });
 
   test('get pictures of the day usecase (success)', () async {
-    final params = ParamsGetPicturesOfTheDay(api_key: api_key);
+    final params = ParamsGetPicturesOfTheDay(api_key: ConfigConstants.API_KEY);
     final result = await usecase(params);
     expect(result.isRight(), true);
     expect(result.fold(id, id), isA<List<NasaApod>>());
