@@ -38,7 +38,8 @@ Here are the technologies used in this project.
 
 ## How to use
 
-### 1 - When you access, you will see the Home page <3
+### 1 - When you access, you will see the Home page :)
+
 ![Homepage image] (https://github.com/LucasMdosAnjos/nasa_app/blob/master/readme/home_screen.png)
 
 ### 2 - You can also see the details of the image by clicking on them.
