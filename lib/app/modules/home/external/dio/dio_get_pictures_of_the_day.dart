@@ -36,7 +36,6 @@ class DioGetPicturesOfTheDay implements GetPicturesOfTheDayDatasource {
   saveInCache(dynamic data) async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      var dir = await getApplicationDocumentsDirectory();
       var cachedList = [];
       if (prefs.containsKey('pictures_data')) {
         //get cached list
