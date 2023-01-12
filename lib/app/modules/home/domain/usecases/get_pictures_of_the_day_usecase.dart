@@ -4,13 +4,17 @@ import 'package:dartz/dartz.dart';
 
 import 'package:nasa_app/app/modules/home/domain/entities/nasa_apod.dart';
 import 'package:nasa_app/app/modules/home/domain/errors/errors.dart';
-import 'package:nasa_app/app/modules/home/infra/repositories/get_pictures_of_the_day_repository.dart';
+import 'package:nasa_app/app/modules/home/domain/repositories/get_pictures_of_the_day_repository.dart';
 
 class ParamsGetPicturesOfTheDay {
   final String api_key;
   ParamsGetPicturesOfTheDay({
     required this.api_key,
   });
+
+  String toUrlParams() {
+    return "api_key=$api_key";
+  }
 }
 
 abstract class IGetPicturesOfTheDayUsecase {

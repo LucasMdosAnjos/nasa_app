@@ -1,17 +1,23 @@
+// ignore_for_file: constant_identifier_names
+
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:nasa_app/app/modules/home/domain/entities/nasa_apod.dart';
 import 'package:nasa_app/app/modules/home/domain/errors/errors.dart';
 import 'package:nasa_app/app/modules/home/domain/usecases/get_pictures_of_the_day_usecase.dart';
-import 'package:nasa_app/app/modules/home/infra/repositories/get_pictures_of_the_day_repository.dart';
+import 'package:nasa_app/app/modules/home/domain/repositories/get_pictures_of_the_day_repository.dart';
+import 'package:nasa_app/app/modules/home/external/dio/dio_get_pictures_of_the_day.dart';
+import 'package:nasa_app/app/modules/home/infra/repositories/get_pictures_of_the_day_repository_impl.dart';
 
 class MockGetPicturesOfTheDayRepositoryImpl extends Mock
     implements GetPicturesOfTheDayRepository {}
 
 void main() {
   const api_key = 'ALhQW2dErZ4vb77uGQDxmUflmKKrtVPuFoo6kCiZ';
-  final repository = MockGetPicturesOfTheDayRepositoryImpl();
+  final datasource = DioGetPicturesOfTheDay();
+  final repository = GetPicturesOfTheDayRepositoryImpl(datasource);
+  //final repository = MockGetPicturesOfTheDayRepositoryImpl(); //If mock is needed
   final usecase = GetPicturesOfTheDayUsecase(repository);
   test('get pictures of the day usecase (success) with mock', () async {
     final params = ParamsGetPicturesOfTheDay(api_key: api_key);
@@ -37,8 +43,22 @@ void main() {
 
   test('get pictures of the day usecase (error) with mock', () async {
     final params = ParamsGetPicturesOfTheDay(api_key: api_key);
-    when(() => repository.getPicturesOfTheDay(params))
-        .thenAnswer((_) async => Left(GetPicturesOfTheDayException('API_KEY_INVALID')));
+    when(() => repository.getPicturesOfTheDay(params)).thenAnswer(
+        (_) async => Left(GetPicturesOfTheDayException('API_KEY_INVALID')));
+    final result = await usecase(params);
+    expect(result.isLeft(), true);
+    expect(result.fold(id, id), isA<GetPicturesOfTheDayException>());
+  });
+
+  test('get pictures of the day usecase (success)', () async {
+    final params = ParamsGetPicturesOfTheDay(api_key: api_key);
+    final result = await usecase(params);
+    expect(result.isRight(), true);
+    expect(result.fold(id, id), isA<List<NasaApod>>());
+  });
+
+  test('get pictures of the day usecase (error)', () async {
+    final params = ParamsGetPicturesOfTheDay(api_key: '');
     final result = await usecase(params);
     expect(result.isLeft(), true);
     expect(result.fold(id, id), isA<GetPicturesOfTheDayException>());
