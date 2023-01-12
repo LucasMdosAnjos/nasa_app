@@ -19,19 +19,29 @@ class DioGetPicturesOfTheDay implements GetPicturesOfTheDayDatasource {
           .get('https://api.nasa.gov/planetary/apod?${params.toUrlParams()}');
       if (response.statusCode == HttpConstants.REQUEST_SUCCESS) {
         final data = MapperGetPicturesOfTheDay.toListNasaApod(response.data);
-        await _saveInCache(response.data);
+        await saveInCache(response.data);
         return data;
       } else {
         throw GetPicturesOfTheDayException('API Error ${response.statusCode}');
       }
     } catch (e) {
-      print(e.toString());
-      throw GetPicturesOfTheDayException('Internal Error');
+      //retrieve from cache
+      return getListFromCache();
+      //throw GetPicturesOfTheDayException('Internal Error');
     }
   }
 
-  _saveInCache(dynamic data) async {
+  saveInCache(dynamic data) async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setString('pictures_data', jsonEncode(data));
+  }
+
+  Future<List<NasaApod>> getListFromCache() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (prefs.containsKey('pictures_data')) {
+      return MapperGetPicturesOfTheDay.toListNasaApod(
+          jsonDecode(prefs.getString('pictures_data')!));
+    }
+    return [];
   }
 }
