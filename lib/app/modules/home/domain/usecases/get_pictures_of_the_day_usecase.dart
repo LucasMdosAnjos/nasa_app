@@ -32,6 +32,9 @@ class GetPicturesOfTheDayUsecase implements IGetPicturesOfTheDayUsecase {
     /*
             Data Validation Before returning repository result
         */
+    if(params.api_key.isEmpty){
+      return Left(GetPicturesOfTheDayException('API_KEY is empty'));
+    }
     return await repository.getPicturesOfTheDay(params);
   }
 }

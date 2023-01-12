@@ -6,7 +6,6 @@ import 'package:nasa_app/app/modules/home/presenter/blocs/get_pictures_of_the_da
 class GetPicturesOfTheDayBloc
     extends Bloc<GetPicturesOfTheDayEvent, GetPicturesOfTheDayState> {
   final GetPicturesOfTheDayUsecase getPicturesOfTheDayUsecase;
-
   GetPicturesOfTheDayBloc(this.getPicturesOfTheDayUsecase)
       : super(GetPicturesOfTheDayInitialState()) {
     on<LoadPicturesEvent>((event, emit) async {
