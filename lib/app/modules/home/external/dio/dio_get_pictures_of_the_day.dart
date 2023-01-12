@@ -48,6 +48,7 @@ class DioGetPicturesOfTheDay implements GetPicturesOfTheDayDatasource {
               .where((element) =>
                   element['date'].toString() == data[i]['date'].toString())
               .isEmpty) {
+            //Case cache does not contain this picture saved
             cachedList.add(await saveSinglePictureInCache(data[i]));
           }
         }
@@ -58,6 +59,7 @@ class DioGetPicturesOfTheDay implements GetPicturesOfTheDayDatasource {
             .where((element) =>
                 element['date'].toString() == data['date'].toString())
             .isEmpty) {
+          //Case cache does not contain this picture saved
           cachedList.add(await saveSinglePictureInCache(data));
         }
         prefs.setString('pictures_data', jsonEncode(cachedList));
