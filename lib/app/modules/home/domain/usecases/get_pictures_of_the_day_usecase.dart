@@ -13,7 +13,7 @@ class ParamsGetPicturesOfTheDay {
   });
 
   String toUrlParams() {
-    return "api_key=$api_key&count=10";
+    return "api_key=$api_key";
   }
 }
 

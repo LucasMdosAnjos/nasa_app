@@ -6,3 +6,8 @@ class LoadPicturesEvent extends GetPicturesOfTheDayEvent {
   ParamsGetPicturesOfTheDay params;
   LoadPicturesEvent({required this.params});
 }
+
+class FilterPicturesByTitleEvent extends GetPicturesOfTheDayEvent {
+  String filter;
+  FilterPicturesByTitleEvent({required this.filter});
+}
