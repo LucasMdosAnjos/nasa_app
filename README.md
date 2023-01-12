@@ -47,7 +47,7 @@ Here are the technologies used in this project.
 ## Features
 
 The main features of the application are:
- - View the Astronomy Picture of The day.
+ - View the Astronomy Picture of the Day.
  - View the details of a specific picture.
  - Filter the pictures by Date.
  - Filter the pictures by Title.
