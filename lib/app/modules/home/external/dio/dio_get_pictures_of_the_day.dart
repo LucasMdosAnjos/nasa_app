@@ -19,7 +19,7 @@ class DioGetPicturesOfTheDay implements GetPicturesOfTheDayDatasource {
           .get('https://api.nasa.gov/planetary/apod?${params.toUrlParams()}');
       if (response.statusCode == HttpConstants.REQUEST_SUCCESS) {
         final data = MapperGetPicturesOfTheDay.toListNasaApod(response.data);
-        await _saveInCache(data);
+        await _saveInCache(response.data);
         return data;
       } else {
         throw GetPicturesOfTheDayException('API Error ${response.statusCode}');
@@ -30,9 +30,8 @@ class DioGetPicturesOfTheDay implements GetPicturesOfTheDayDatasource {
     }
   }
 
-  _saveInCache(List<NasaApod> data) async {
+  _saveInCache(dynamic data) async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setString('pictures_data', jsonEncode(data));
-    print(prefs.get('pictures_data'));
   }
 }
