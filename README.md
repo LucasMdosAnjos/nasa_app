@@ -48,7 +48,11 @@ Here are the technologies used in this project.
 
 ### 3 - Or filter the images by date :D
 
+![Filter By Date image](https://github.com/LucasMdosAnjos/nasa_app/blob/master/readme/filter_by_date_screen.png)
+
 ### 4 - Or filter the images by title.
+
+![Filter By Title image](https://github.com/LucasMdosAnjos/nasa_app/blob/master/readme/filter_by_title_screen.png)
 
 ## Features
 
