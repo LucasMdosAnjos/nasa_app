@@ -38,7 +38,7 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  reloadPictures() {
+  reloadPictures() async {
     textEditingController.clear();
     getPicturesOfTheDayBloc.add(LoadPicturesEvent(
         params: ParamsGetPicturesOfTheDay(api_key: ConfigConstants.API_KEY)));
@@ -64,85 +64,85 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
         appBar: AppBar(
           title: const Text("Nasa Images"),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.refresh),
-              onPressed: reloadPictures,
-            )
-          ],
         ),
-        body: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: textEditingController,
-                      decoration:
-                          const InputDecoration(hintText: 'Find by title'),
-                      onSubmitted: (value) {
-                        getPicturesOfTheDayBloc
-                            .add(FilterPicturesByTitleEvent(filter: value));
-                      },
-                    ),
-                  ),
-                  IconButton(
-                    onPressed: pickDate,
-                    icon: const Icon(Icons.calendar_month),
-                    color: Colors.blue,
-                  )
-                ],
-              ),
-            ),
-            Expanded(
-              child: BlocBuilder<GetPicturesOfTheDayBloc,
-                  GetPicturesOfTheDayState>(
-                builder: (_, state) {
-                  if (state is GetPicturesOfTheDayInitialState) {
-                    return Container();
-                  }
-                  if (state is GetPicturesOfTheDayLoadingState) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
-                  if (state is GetPicturesOfTheDayFailState) {
-                    return Center(
-                      child: Text(
-                        state.error,
-                        style: const TextStyle(
-                            fontSize: 20,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500),
+        body: RefreshIndicator(
+          onRefresh: () async {
+            //pull to refresh
+            reloadPictures();
+          },
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: textEditingController,
+                        decoration:
+                            const InputDecoration(hintText: 'Find by title'),
+                        onSubmitted: (value) {
+                          getPicturesOfTheDayBloc
+                              .add(FilterPicturesByTitleEvent(filter: value));
+                        },
                       ),
-                    );
-                  }
-                  if (state is GetPicturesOfTheDaySuccessState) {
-                    if (state.list.isEmpty) {
-                      return const Center(
+                    ),
+                    IconButton(
+                      onPressed: pickDate,
+                      icon: const Icon(Icons.calendar_month),
+                      color: Colors.blue,
+                    )
+                  ],
+                ),
+              ),
+              Expanded(
+                child: BlocBuilder<GetPicturesOfTheDayBloc,
+                    GetPicturesOfTheDayState>(
+                  builder: (_, state) {
+                    if (state is GetPicturesOfTheDayInitialState) {
+                      return Container();
+                    }
+                    if (state is GetPicturesOfTheDayLoadingState) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    if (state is GetPicturesOfTheDayFailState) {
+                      return Center(
                         child: Text(
-                          'No results found.',
-                          style: TextStyle(
+                          state.error,
+                          style: const TextStyle(
                               fontSize: 20,
                               color: Colors.black,
                               fontWeight: FontWeight.w500),
                         ),
                       );
                     }
-                    return ListView.builder(
-                        controller: scrollController,
-                        itemCount: state.list.length,
-                        itemBuilder: ((context, index) {
-                          final NasaApod nasaApod = state.list[index];
-                          return ItemNasaApod(nasaApod);
-                        }));
-                  }
-                  return Container();
-                },
-                bloc: getPicturesOfTheDayBloc,
-              ),
-            )
-          ],
+                    if (state is GetPicturesOfTheDaySuccessState) {
+                      if (state.list.isEmpty) {
+                        return const Center(
+                          child: Text(
+                            'No results found.',
+                            style: TextStyle(
+                                fontSize: 20,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        );
+                      }
+                      return ListView.builder(
+                          controller: scrollController,
+                          itemCount: state.list.length,
+                          itemBuilder: ((context, index) {
+                            final NasaApod nasaApod = state.list[index];
+                            return ItemNasaApod(nasaApod);
+                          }));
+                    }
+                    return Container();
+                  },
+                  bloc: getPicturesOfTheDayBloc,
+                ),
+              )
+            ],
+          ),
         ));
   }
 }

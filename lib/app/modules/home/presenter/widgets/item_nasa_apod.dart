@@ -3,6 +3,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:nasa_app/app/modules/home/domain/entities/nasa_apod.dart';
 import 'package:nasa_app/app/utils/utils.dart';
 
@@ -37,14 +38,23 @@ class ItemNasaApod extends StatelessWidget {
           width: MediaQuery.of(context).size.width,
           child: Column(
             children: [
-              Container(
-                height: MediaQuery.of(context).size.height * 0.7,
-                decoration: BoxDecoration(
-                    image: nasaApod.image_path != null
-                        ? DecorationImage(
-                            image: MemoryImage(
-                                File(nasaApod.image_path!).readAsBytesSync()))
-                        : DecorationImage(image: NetworkImage(nasaApod.url))),
+              GestureDetector(
+                onTap: () {
+                  Modular.to.pushNamed('/detail_picture/', arguments: nasaApod);
+                },
+                child: Hero(
+                  tag: nasaApod,
+                  child: Container(
+                    height: MediaQuery.of(context).size.height * 0.7,
+                    decoration: BoxDecoration(
+                        image: nasaApod.image_path != null
+                            ? DecorationImage(
+                                image: MemoryImage(File(nasaApod.image_path!)
+                                    .readAsBytesSync()))
+                            : DecorationImage(
+                                image: NetworkImage(nasaApod.url))),
+                  ),
+                ),
               ),
               const SizedBox(
                 height: 10,
