@@ -30,7 +30,6 @@ class DioGetPicturesOfTheDay implements GetPicturesOfTheDayDatasource {
     } catch (e) {
       //retrieve from cache
       return getListFromCache(params);
-      //throw GetPicturesOfTheDayException('Internal Error');
     }
   }
 
@@ -38,23 +37,42 @@ class DioGetPicturesOfTheDay implements GetPicturesOfTheDayDatasource {
     try {
       final prefs = await SharedPreferences.getInstance();
       var dir = await getApplicationDocumentsDirectory();
-
+      var cachedList = [];
+      if (prefs.containsKey('pictures_data')) {
+        //get cached list
+        cachedList = jsonDecode(prefs.getString('pictures_data')!);
+      }
       if (data is List) {
         for (int i = 0; i < data.length; i++) {
-          var imageDownloadPath = '${dir.path}/${data[i]['date']}.jpg';
-          await dio.download(data[i]['url'], imageDownloadPath);
-          data[i]['image_path'] = imageDownloadPath;
+          if (cachedList
+              .where((element) =>
+                  element['date'].toString() == data[i]['date'].toString())
+              .isEmpty) {
+            cachedList.add(await saveSinglePictureInCache(data[i]));
+          }
         }
-        prefs.setString('pictures_data', jsonEncode(data));
+        prefs.setString('pictures_data', jsonEncode(cachedList));
       }
       if (data is Map) {
-        var imageDownloadPath = '${dir.path}/${data['date']}.jpg';
-        await dio.download(data['url'], imageDownloadPath);
-        data['image_path'] = imageDownloadPath;
-        print(data['image_path']);
-        prefs.setString('pictures_data', jsonEncode(data));
+        if (cachedList
+            .where((element) =>
+                element['date'].toString() == data['date'].toString())
+            .isEmpty) {
+          cachedList.add(await saveSinglePictureInCache(data));
+        }
+        prefs.setString('pictures_data', jsonEncode(cachedList));
       }
-    } catch (e) {}
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  Future<Map> saveSinglePictureInCache(Map data) async {
+    var dir = await getApplicationDocumentsDirectory();
+    var imageDownloadPath = '${dir.path}/${data['date']}.jpg';
+    await dio.download(data['url'], imageDownloadPath);
+    data['image_path'] = imageDownloadPath;
+    return data;
   }
 
   Future<List<NasaApod>> getListFromCache(
@@ -62,14 +80,19 @@ class DioGetPicturesOfTheDay implements GetPicturesOfTheDayDatasource {
     try {
       final prefs = await SharedPreferences.getInstance();
       if (prefs.containsKey('pictures_data')) {
+        //Case contains cache
         final data = MapperGetPicturesOfTheDay.toListNasaApod(
             jsonDecode(prefs.getString('pictures_data')!));
         if (params.date != null) {
+          //filter by date
           return data
               .where((element) => Utils.dateTimeFromString(element.date)
                   .isAtSameMomentAs(Utils.dateTimeFromString(params.date!)))
               .toList();
         }
+        //Sort the cached data by date
+        data.sort((a, b) => Utils.dateTimeFromString(a.date)
+            .compareTo(Utils.dateTimeFromString(b.date)));
         return data;
       }
       return [];
