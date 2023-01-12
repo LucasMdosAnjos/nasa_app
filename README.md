@@ -38,20 +38,11 @@ Here are the technologies used in this project.
 
 ### 1 - When you access, you will see the Home page <3
 
-![Homepage image](https://github.com/LucasMdosAnjos/nasa_app/edit/master/readme/home_screen.png)
-
 ### 2 - You can also see the details of the image by clicking on them.
-
-![Details image](https://github.com/LucasMdosAnjos/nasa_app/edit/master/readme/detail_screen.png)
 
 ### 3 - Or filter the images by date :D
 
-![Filter by Date](https://github.com/LucasMdosAnjos/nasa_app/edit/master/readme/filter_by_date_screen.png)
-
 ### 4 - Or filter the images by title.
-
-![Filter by Title](https://github.com/LucasMdosAnjos/nasa_app/edit/master/readme/filter_by_title_screen.png)
-
 
 ## Features
 
