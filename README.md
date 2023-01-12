@@ -44,6 +44,8 @@ Here are the technologies used in this project.
 
 ### 2 - You can also see the details of the image by clicking on them.
 
+![Detail image](https://github.com/LucasMdosAnjos/nasa_app/blob/master/readme/detail_screen.png)
+
 ### 3 - Or filter the images by date :D
 
 ### 4 - Or filter the images by title.
