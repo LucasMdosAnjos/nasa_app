@@ -7,6 +7,7 @@ import 'package:nasa_app/app/modules/home/domain/usecases/get_pictures_of_the_da
 import 'package:nasa_app/app/modules/home/domain/entities/nasa_apod.dart';
 import 'package:nasa_app/app/modules/home/external/mapper/mapper.dart';
 import 'package:nasa_app/app/modules/home/infra/datasources/get_pictures_of_the%20day_datasource.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DioGetPicturesOfTheDay implements GetPicturesOfTheDayDatasource {
@@ -19,7 +20,7 @@ class DioGetPicturesOfTheDay implements GetPicturesOfTheDayDatasource {
           .get('https://api.nasa.gov/planetary/apod?${params.toUrlParams()}');
       if (response.statusCode == HttpConstants.REQUEST_SUCCESS) {
         final data = MapperGetPicturesOfTheDay.toListNasaApod(response.data);
-        await saveInCache(response.data);
+        saveInCache(response.data);
         return data;
       } else {
         throw GetPicturesOfTheDayException('API Error ${response.statusCode}');
@@ -33,7 +34,24 @@ class DioGetPicturesOfTheDay implements GetPicturesOfTheDayDatasource {
 
   saveInCache(dynamic data) async {
     final prefs = await SharedPreferences.getInstance();
-    prefs.setString('pictures_data', jsonEncode(data));
+    var dir = await getApplicationDocumentsDirectory();
+
+    if (data is List) {
+      for (int i = 0; i < data.length; i++) {
+        var imageDownloadPath = '${dir.path}/${data[i]['date']}.jpg';
+        await dio.download(data[i]['url'], imageDownloadPath);
+        data[i]['image_path'] = imageDownloadPath;
+        print(data[i]['image_path']);
+      }
+      prefs.setString('pictures_data', jsonEncode(data));
+    }
+    if (data is Map) {
+      var imageDownloadPath = '${dir.path}/${data['date']}.jpg';
+      await dio.download(data['url'], imageDownloadPath);
+      data['image_path'] = imageDownloadPath;
+      print(data['image_path']);
+      prefs.setString('pictures_data', jsonEncode(data));
+    }
   }
 
   Future<List<NasaApod>> getListFromCache() async {

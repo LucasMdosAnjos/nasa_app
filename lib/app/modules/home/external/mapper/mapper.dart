@@ -16,21 +16,23 @@ class MapperGetPicturesOfTheDay {
               media_type: e['media_type'],
               service_version: e['service_version'],
               title: e['title'],
-              url: e['url']))
+              url: e['url'],
+              image_path: e['image_path']))
           .toList();
     }
     if (result is Map) {
       //return a list with just a single NasaApod element
       return [
         NasaApod(
-            copyright: result['copyright']?? 'No author',
+            copyright: result['copyright'] ?? 'No author',
             date: result['date'],
             explanation: result['explanation'],
             hdurl: result['hdurl'] ?? result['url'],
             media_type: result['media_type'],
             service_version: result['service_version'],
             title: result['title'],
-            url: result['url'])
+            url: result['url'],
+            image_path: result['image_path'])
       ];
     }
     throw GetPicturesOfTheDayException('Internal Error');

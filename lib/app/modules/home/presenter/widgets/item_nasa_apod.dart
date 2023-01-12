@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors_in_immutables, use_key_in_widget_constructors
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:nasa_app/app/modules/home/domain/entities/nasa_apod.dart';
 import 'package:nasa_app/app/utils/utils.dart';
@@ -38,7 +40,11 @@ class ItemNasaApod extends StatelessWidget {
               Container(
                 height: MediaQuery.of(context).size.height * 0.7,
                 decoration: BoxDecoration(
-                    image: DecorationImage(image: NetworkImage(nasaApod.url))),
+                    image: nasaApod.image_path != null
+                        ? DecorationImage(
+                            image: MemoryImage(
+                                File(nasaApod.image_path!).readAsBytesSync()))
+                        : DecorationImage(image: NetworkImage(nasaApod.url))),
               ),
               const SizedBox(
                 height: 10,
