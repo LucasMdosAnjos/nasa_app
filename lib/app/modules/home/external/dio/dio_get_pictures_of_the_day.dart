@@ -63,9 +63,7 @@ class DioGetPicturesOfTheDay implements GetPicturesOfTheDayDatasource {
         }
         prefs.setString('pictures_data', jsonEncode(cachedList));
       }
-    } catch (e) {
-      print(e.toString());
-    }
+    } catch (e) {}
   }
 
   Future<Map> saveSinglePictureInCache(Map data) async {
