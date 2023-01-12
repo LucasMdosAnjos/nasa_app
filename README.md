@@ -14,6 +14,8 @@ Here are the technologies used in this project.
 * Github
 * Nasa API
 
+## Platforms supported
+* Android only
 ## Getting started
 
 * Dependency
