@@ -1,16 +1,80 @@
-# nasa_app
+## Nasa App
+This is my nasa app and you can find a lot of cool images and details aboute space!
 
-A new Flutter project.
 
-## Getting Started
+## Technology 
 
-This project is a starting point for a Flutter application.
+Here are the technologies used in this project.
 
-A few resources to get you started if this is your first Flutter project:
+* Flutter version  3.3.10 (stable)
+* Dart version 2.8.16 (stable)
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## Services Used
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+* Github
+* Nasa API
+
+## Getting started
+
+* Dependency
+  - flutter_modular  
+  - dartz
+  - mocktail
+  - dio
+  - intl
+  - shared_preferences
+  - path_provider
+  - flutter_bloc
+  - bloc_test
+
+  
+* To install the dependencies.
+  - flutter pub get
+  
+* To run the project.
+  - flutter run
+
+## How to use
+
+### 1 - When you access, you will see the Home page <3
+
+![Homepage image](https://github.com/LucasMdosAnjos/nasa_app/edit/master/readme/home_screen.png)
+
+### 2 - You can also see the details of the image by clicking on them.
+
+![Details image](https://github.com/LucasMdosAnjos/nasa_app/edit/master/readme/detail_screen.png)
+
+### 3 - Or filter the images by date :D
+
+![Filter by Date](https://github.com/LucasMdosAnjos/nasa_app/edit/master/readme/filter_by_date_screen.png)
+
+### 4 - Or filter the images by title.
+
+![Filter by Title](https://github.com/LucasMdosAnjos/nasa_app/edit/master/readme/filter_by_title_screen.png)
+
+
+## Features
+
+The main features of the application are:
+ - View the Astronomy Picture of The day.
+ - View the details of a specific picture.
+ - Filter the pictures by Date.
+ - Filter the pictures by Title.
+
+
+## Links
+  - Repository: https://github.com/LucasMdosAnjos/nasa_app
+    - In case of sensitive bugs like security vulnerabilities, please contact
+      lucasmon@live.com directly instead of using issue tracker. We value your effort
+      to improve the security and privacy of this project!
+
+  ## Versioning
+
+  1.0.0.0
+
+
+  ## Authors
+
+  * **Lucas Monteiro dos Anjos** 
+
+  Thanks to visiting me and good coding!
