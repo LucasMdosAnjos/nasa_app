@@ -9,16 +9,18 @@ import 'package:nasa_app/app/modules/home/infra/datasources/get_pictures_of_the%
 class DioGetPicturesOfTheDay implements GetPicturesOfTheDayDatasource {
   final Dio dio = Dio();
   @override
-  Future<List<NasaApod>> getPicturesOfTheDay(ParamsGetPicturesOfTheDay params) async{
-    try{
-      final response = await dio.get('https://api.nasa.gov/planetary/apod?${params.toUrlParams()}');
-      if(response.statusCode == HttpConstants.REQUEST_SUCCESS){
-      return MapperGetPicturesOfTheDay.toListNasaApod(response.data);
-      }else{
+  Future<List<NasaApod>> getPicturesOfTheDay(
+      ParamsGetPicturesOfTheDay params) async {
+    try {
+      final response = await dio
+          .get('https://api.nasa.gov/planetary/apod?${params.toUrlParams()}');
+      if (response.statusCode == HttpConstants.REQUEST_SUCCESS) {
+        return MapperGetPicturesOfTheDay.toListNasaApod(response.data);
+      } else {
         throw GetPicturesOfTheDayException('API Error ${response.statusCode}');
       }
-    }catch(e){
-       throw GetPicturesOfTheDayException('Internal Error');
+    } catch (e) {
+      throw GetPicturesOfTheDayException('Internal Error');
     }
   }
 }

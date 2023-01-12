@@ -31,6 +31,7 @@ class _HomePageState extends State<HomePage> {
       if (scrollController.position.atEdge) {
         bool isTop = scrollController.position.pixels == 0;
         if (!isTop) {
+          //Add more itens if possible when user reached the bottom of the listview
           getPicturesOfTheDayBloc.add(AddMorePaginatedItensEvent());
         }
       }
