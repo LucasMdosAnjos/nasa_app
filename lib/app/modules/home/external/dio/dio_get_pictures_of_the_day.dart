@@ -10,6 +10,8 @@ import 'package:nasa_app/app/modules/home/infra/datasources/get_pictures_of_the%
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../../utils/utils.dart';
+
 class DioGetPicturesOfTheDay implements GetPicturesOfTheDayDatasource {
   final Dio dio = Dio();
   @override
@@ -27,39 +29,52 @@ class DioGetPicturesOfTheDay implements GetPicturesOfTheDayDatasource {
       }
     } catch (e) {
       //retrieve from cache
-      return getListFromCache();
+      return getListFromCache(params);
       //throw GetPicturesOfTheDayException('Internal Error');
     }
   }
 
   saveInCache(dynamic data) async {
-    final prefs = await SharedPreferences.getInstance();
-    var dir = await getApplicationDocumentsDirectory();
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      var dir = await getApplicationDocumentsDirectory();
 
-    if (data is List) {
-      for (int i = 0; i < data.length; i++) {
-        var imageDownloadPath = '${dir.path}/${data[i]['date']}.jpg';
-        await dio.download(data[i]['url'], imageDownloadPath);
-        data[i]['image_path'] = imageDownloadPath;
-        print(data[i]['image_path']);
+      if (data is List) {
+        for (int i = 0; i < data.length; i++) {
+          var imageDownloadPath = '${dir.path}/${data[i]['date']}.jpg';
+          await dio.download(data[i]['url'], imageDownloadPath);
+          data[i]['image_path'] = imageDownloadPath;
+        }
+        prefs.setString('pictures_data', jsonEncode(data));
       }
-      prefs.setString('pictures_data', jsonEncode(data));
-    }
-    if (data is Map) {
-      var imageDownloadPath = '${dir.path}/${data['date']}.jpg';
-      await dio.download(data['url'], imageDownloadPath);
-      data['image_path'] = imageDownloadPath;
-      print(data['image_path']);
-      prefs.setString('pictures_data', jsonEncode(data));
-    }
+      if (data is Map) {
+        var imageDownloadPath = '${dir.path}/${data['date']}.jpg';
+        await dio.download(data['url'], imageDownloadPath);
+        data['image_path'] = imageDownloadPath;
+        print(data['image_path']);
+        prefs.setString('pictures_data', jsonEncode(data));
+      }
+    } catch (e) {}
   }
 
-  Future<List<NasaApod>> getListFromCache() async {
-    final prefs = await SharedPreferences.getInstance();
-    if (prefs.containsKey('pictures_data')) {
-      return MapperGetPicturesOfTheDay.toListNasaApod(
-          jsonDecode(prefs.getString('pictures_data')!));
+  Future<List<NasaApod>> getListFromCache(
+      ParamsGetPicturesOfTheDay params) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      if (prefs.containsKey('pictures_data')) {
+        final data = MapperGetPicturesOfTheDay.toListNasaApod(
+            jsonDecode(prefs.getString('pictures_data')!));
+        if (params.date != null) {
+          return data
+              .where((element) => Utils.dateTimeFromString(element.date)
+                  .isAtSameMomentAs(Utils.dateTimeFromString(params.date!)))
+              .toList();
+        }
+        return data;
+      }
+      return [];
+    } catch (e) {
+      return [];
     }
-    return [];
   }
 }

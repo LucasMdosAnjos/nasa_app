@@ -14,7 +14,7 @@ class ParamsGetPicturesOfTheDay {
 
   String toUrlParams() {
     if (date != null) {
-      return "api_key=$api_key&start_date=$date";
+      return "api_key=$api_key&start_date=$date&end_date=$date";
     }
     return "api_key=$api_key&start_date=${Utils.formattedDate(DateTime.now().add(const Duration(days: -9)), format: 'yyyy-MM-dd')}";
   }
