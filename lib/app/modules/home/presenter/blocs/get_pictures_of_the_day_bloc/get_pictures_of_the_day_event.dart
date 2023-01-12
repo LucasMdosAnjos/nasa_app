@@ -11,3 +11,12 @@ class FilterPicturesByTitleEvent extends GetPicturesOfTheDayEvent {
   String filter;
   FilterPicturesByTitleEvent({required this.filter});
 }
+
+class FilterPicturesByDateEvent extends GetPicturesOfTheDayEvent {
+  String date;
+  FilterPicturesByDateEvent({required this.date});
+}
+
+class AddMorePaginatedItensEvent extends GetPicturesOfTheDayEvent {
+  AddMorePaginatedItensEvent();
+}

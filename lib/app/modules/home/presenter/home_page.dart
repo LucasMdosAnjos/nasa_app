@@ -10,6 +10,7 @@ import 'package:nasa_app/app/modules/home/presenter/blocs/get_pictures_of_the_da
 import 'package:nasa_app/app/modules/home/presenter/blocs/get_pictures_of_the_day_bloc/get_pictures_of_the_day_event.dart';
 import 'package:nasa_app/app/modules/home/presenter/blocs/get_pictures_of_the_day_bloc/get_pictures_of_the_day_state.dart';
 import 'package:nasa_app/app/modules/home/presenter/widgets/item_nasa_apod.dart';
+import 'package:nasa_app/app/utils/utils.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -21,17 +22,40 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final GetPicturesOfTheDayBloc getPicturesOfTheDayBloc = Modular.get();
   final TextEditingController textEditingController = TextEditingController();
-
+  final scrollController = ScrollController();
   @override
   void initState() {
     super.initState();
     reloadPictures();
+    scrollController.addListener(() {
+      if (scrollController.position.atEdge) {
+        bool isTop = scrollController.position.pixels == 0;
+        if (!isTop) {
+          getPicturesOfTheDayBloc.add(AddMorePaginatedItensEvent());
+        }
+      }
+    });
   }
 
   reloadPictures() {
     textEditingController.clear();
     getPicturesOfTheDayBloc.add(LoadPicturesEvent(
         params: ParamsGetPicturesOfTheDay(api_key: ConfigConstants.API_KEY)));
+  }
+
+  pickDate() async {
+    DateTime? pickedDate = await showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(2010),
+        lastDate: DateTime.now());
+    if (pickedDate != null) {
+      textEditingController.clear();
+      getPicturesOfTheDayBloc.add(LoadPicturesEvent(
+          params: ParamsGetPicturesOfTheDay(
+              api_key: ConfigConstants.API_KEY,
+              date: Utils.formattedDate(pickedDate, format: 'yyyy-MM-dd'))));
+    }
   }
 
   @override
@@ -50,12 +74,25 @@ class _HomePageState extends State<HomePage> {
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: TextField(
-                controller: textEditingController,
-                onSubmitted: (value) {
-                  getPicturesOfTheDayBloc
-                      .add(FilterPicturesByTitleEvent(filter: value));
-                },
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: textEditingController,
+                      decoration:
+                          const InputDecoration(hintText: 'Find by title'),
+                      onSubmitted: (value) {
+                        getPicturesOfTheDayBloc
+                            .add(FilterPicturesByTitleEvent(filter: value));
+                      },
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: pickDate,
+                    icon: const Icon(Icons.calendar_month),
+                    color: Colors.blue,
+                  )
+                ],
               ),
             ),
             Expanded(
@@ -80,7 +117,19 @@ class _HomePageState extends State<HomePage> {
                     );
                   }
                   if (state is GetPicturesOfTheDaySuccessState) {
+                    if (state.list.isEmpty) {
+                      return const Center(
+                        child: Text(
+                          'No results found.',
+                          style: TextStyle(
+                              fontSize: 20,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w500),
+                        ),
+                      );
+                    }
                     return ListView.builder(
+                        controller: scrollController,
                         itemCount: state.list.length,
                         itemBuilder: ((context, index) {
                           final NasaApod nasaApod = state.list[index];

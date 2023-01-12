@@ -12,7 +12,7 @@ class MapperGetPicturesOfTheDay {
               copyright: e['copyright'] ?? 'No author',
               date: e['date'],
               explanation: e['explanation'],
-              hdurl: e['hdurl'],
+              hdurl: e['hdurl'] ?? e['url'],
               media_type: e['media_type'],
               service_version: e['service_version'],
               title: e['title'],
@@ -23,10 +23,10 @@ class MapperGetPicturesOfTheDay {
       //return a list with just a single NasaApod element
       return [
         NasaApod(
-            copyright: result['copyright'],
+            copyright: result['copyright']?? 'No author',
             date: result['date'],
             explanation: result['explanation'],
-            hdurl: result['hdurl'],
+            hdurl: result['hdurl'] ?? result['url'],
             media_type: result['media_type'],
             service_version: result['service_version'],
             title: result['title'],
